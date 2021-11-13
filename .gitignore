@@ -1,0 +1,4 @@
+*.doc
+/instantclient_12_2
+/sqldeveloper
+*.zip

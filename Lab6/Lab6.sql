@@ -1,7 +1,6 @@
 select sum(value) from v$sga;
 
-select component, current_size, min_size, max_size, granule_size from v$sga_dynamic_components 
-where component like '%pool' or component like '%Pool';
+select component, current_size, min_size, max_size, granule_size from v$sga_dynamic_components ;
 
 select component, granule_size from v$sga_dynamic_components 
 where component like '%pool';
@@ -13,8 +12,15 @@ select sum(current_size) as default_cache, sum(min_size) as min_size, sum(max_si
 select sum(current_size) as keep_cache, sum(min_size) as min_size, sum(max_size) as max_size from v$sga_dynamic_components where component like 'KEEP%';
 select sum(current_size) as recycle_cache, sum(min_size) as min_size, sum(max_size) as max_size from v$sga_dynamic_components where component like 'RECYCLE%';
 
-create table XXX(k int)  storage(buffer_pool keep) tablespace users;
+alter system set db_keep_cache_size = 16 ;
+--alter system set db_recycle_cache_size = 0;
+show parameter db_keep_cache_size;
+
+
+create table XXX(k int)  storage(buffer_pool keep);
 insert into XXX values(5);
+drop table XXX;
+select count(*) from XXX;
 select segment_name, segment_type, tablespace_name, buffer_pool from user_segments where segment_name = 'XXX';
 
 create table CCC (c int) cache storage(buffer_pool default);
